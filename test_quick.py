@@ -19,4 +19,4 @@ datasets = {
 }
 
 for name, df in datasets.items():
-    print(f"✅ {name}: {df.shape} — columnas: {list(df.columns)}")
+    print(f" {name}: {df.shape} — columnas: {list(df.columns)}")
