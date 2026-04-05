@@ -1,53 +1,59 @@
 import pandas as pd
 import numpy as np
 from faker import Faker
+from .utils import inject_missing
 
+# crea una instancia global de Faker 
 fake = Faker()
 
-def generate_elections(n=500, seed=42):
+# define la función con 3 parámetros (con parámetros default)
+def generate_elections(n=500, seed=42, missing_rate=0.0):
     """
-    Generate a synthetic fictional elections dataset.
-
-    Parameters
-    ----------
+    Genera un conjunto de datos sintético de elecciones ficticias.
+    Parámetros:
     n : int
-        Number of rows to generate (one row per region-candidate combination).
+        Número de filas a generar.
     seed : int
-        Random seed for reproducibility.
-
-    Returns
-    -------
-    pd.DataFrame
+        Semilla aleatoria para reproducibilidad.
+    missing_rate : float
+        Proporción de valores faltantes a inyectar (0.0 a 1.0).
+    Devuelve: pd.DataFrame
     """
+    # fija la semilla en numpy y en Faker por separado para garantizar reproducibilidad completa
     np.random.seed(seed)
     Faker.seed(seed)
 
+    # define los valores posibles para las columnas categóricas
     candidates = ["Candidate A", "Candidate B", "Candidate C", "Candidate D"]
     parties = ["Progressive Party", "Conservative Party", "Green Party", "Liberal Party"]
-    regions = [fake.state() for _ in range(n // len(candidates))]
     election_types = ["Presidential", "Legislative", "Municipal", "Regional"]
+    # genera nombres de regiones usando Faker y divide entre el número de candidatos porque cada región generará una fila por candidato
+    regions = [fake.state() for _ in range(n // len(candidates))]
 
-    rows = []
-    for region in regions:
-        total_votes = np.random.randint(10000, 500000)
-        raw = np.random.dirichlet(alpha=[3, 2, 1, 1]) * total_votes
-        votes_per_candidate = raw.astype(int)
+    rows = [] # inicializa una lista vacía que irá llenando fila por fila
+    for region in regions: # itera sobre cada región generada 
+        total_votes = np.random.randint(10000, 500000) # genera el total de votos de la región entre 10,000 y 500,000 (1 solo número por región)
+        raw = np.random.dirichlet(alpha=[3, 2, 1, 1]) * total_votes # genera 4 proporciones que usman exactamente 1 usando distribución Dirichlet, luego las múltiplica por el total de votos. alpha hace que el candidato A tenga ventaja sobre todos los demás (imitando realidad)
+        votes_per_candidate = raw.astype(int) # convierte los votos a enteros (pequeña pérdida de precisión)
 
-        for i, candidate in enumerate(candidates):
-            rows.append({
-                "record_id": f"ELEC_{str(len(rows)).zfill(6)}",
-                "region": region,
-                "election_type": np.random.choice(election_types),
-                "year": np.random.choice([2020, 2021, 2022, 2023, 2024]),
+        for i, candidate in enumerate(candidates): # itera sobre cada candidato (el índice i se usa para asignar el partido correspondiente)
+            rows.append({  # agrega una fila al listado
+                "record_id": f"ELEC_{str(len(rows)).zfill(6)}", # genera ids únicos y secuenciales usando len(rows) como contador
+                "region": region, 
+                "election_type": np.random.choice(election_types), # escoge tipo de elección aleatoriamente con probabilidad uniforme
+                "year": np.random.choice([2020, 2021, 2022, 2023, 2024]), # escoge año de elección con probabilidad uniforme
                 "candidate": candidate,
                 "party": parties[i],
                 "votes": votes_per_candidate[i],
                 "total_votes_region": total_votes,
-                "turnout_pct": np.round(np.random.uniform(40, 85), 1),
-                "incumbent": candidate == "Candidate A",
+                "turnout_pct": np.round(np.random.uniform(40, 85), 1), # genera participación electoral con distribución uniforme continua entre 40% y 85%
+                "incumbent": candidate == "Candidate A", # marca al candidato A como incumbente
             })
 
     df = pd.DataFrame(rows[:n])
+    
+    # calcula el porcentaje de votos de cada candidato en su región
     df["vote_share_pct"] = np.round(df["votes"] / df["total_votes_region"] * 100, 2)
 
-    return df.reset_index(drop=True)
+    # pasa el DataFrame completo por inject_missing antes de devolverlo
+    return inject_missing(df, missing_rate=missing_rate, seed=seed)

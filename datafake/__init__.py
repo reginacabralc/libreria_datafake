@@ -1,3 +1,4 @@
+# cada import importa una función de su archivo correspondiente (con el . busca dentro del propio archivo)
 from .sales import generate_sales
 from .users import generate_users
 from .football import generate_football
@@ -9,6 +10,7 @@ from .health import generate_health
 from .flights import generate_flights
 from .elections import generate_elections
 
+# define las funciones públicas (lo que se exporta cuando alguien hace from datafake import *)
 __all__ = [
     "generate_sales",
     "generate_users",
@@ -22,4 +24,5 @@ __all__ = [
     "generate_elections",
 ]
 
+# guarda la versión de la librería (debe coincidir siempre con la versión en pyproject.toml)
 __version__ = "0.1.0"
