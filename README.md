@@ -51,7 +51,7 @@ from datafake import generate_sales
 df = generate_sales(n=500, seed=42)
 print(df.head())
 ```
-sale_id        date customer_id  ... payment_method     status  revenue
+
 ---
 
 ## Parámetros disponibles
@@ -141,10 +141,9 @@ print(df1.equals(df2))  # True
 
 ## Tutorial interactivo
 
-Abre el notebook tutorial directamente en Google Colab:
+Puedes explorar el notebook tutorial en la carpeta `notebooks/` del repositorio:
 
-[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/reginacabralc/datafake/blob/main/notebooks/tutorial.ipynb)
-
+[Ver tutorial](https://github.com/reginacabralc/datafake/blob/main/notebooks/tutorial.ipynb)
 ---
 
 ## Instalación con Docker
