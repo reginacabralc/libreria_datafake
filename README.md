@@ -143,7 +143,7 @@ print(df1.equals(df2))  # True
 
 Abre el notebook tutorial directamente en Google Colab:
 
-[![Abrir en Colab](https://colab.research.google.com/github/reginacabralc/libreria_datafake/blob/main/notebooks/tutorial.ipynb)
+[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/reginacabralc/libreria_datafake/blob/main/notebooks/tutorial.ipynb)
 ---
 
 
