@@ -141,10 +141,11 @@ print(df1.equals(df2))  # True
 
 ## Tutorial interactivo
 
-Puedes explorar el notebook tutorial en la carpeta `notebooks/` del repositorio:
+Abre el notebook tutorial directamente en Google Colab:
 
-[Ver tutorial](https://github.com/reginacabralc/libreria_datafake/blob/main/notebooks/tutorial.ipynb)
+[![Abrir en Colab](https://colab.research.google.com/github/reginacabralc/libreria_datafake/blob/main/notebooks/tutorial.ipynb)
 ---
+
 
 ## Instalación con Docker
 ```bash
