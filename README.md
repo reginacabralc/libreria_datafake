@@ -1,4 +1,4 @@
-# datafake 🎲
+# datafake 
 
 Genera datasets sintéticos realistas para pruebas, enseñanza y desarrollo.
 
@@ -143,7 +143,7 @@ print(df1.equals(df2))  # True
 
 Puedes explorar el notebook tutorial en la carpeta `notebooks/` del repositorio:
 
-[Ver tutorial](https://github.com/reginacabralc/datafake/blob/main/notebooks/tutorial.ipynb)
+[Ver tutorial](https://github.com/reginacabralc/libreria_datafake/blob/main/notebooks/tutorial.ipynb)
 ---
 
 ## Instalación con Docker
