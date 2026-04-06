@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 # definimos la función que recibe 3 parámetros. 
-def inject_missing(df: pd.DataFrame, missing_rate: float = 0.0, seed: int = None) 
+def inject_missing(df: pd.DataFrame, missing_rate: float = 0.0, seed: int = None):
     """
     Inyecta valores NaN aleatoriamente en un DataFrame.
     Parámetros:

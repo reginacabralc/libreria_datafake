@@ -26,7 +26,7 @@ def generate_music(n=500, seed=42, missing_rate=0.0):
     # define los valores posibles para las columnas categóricas
     genres = ["Pop", "Rock", "Hip-Hop", "Electronic", "Jazz", "Classical", "Reggaeton", "R&B"]
     moods = ["Happy", "Sad", "Energetic", "Chill", "Romantic", "Angry"]
-    platforms = ["Spotify", "Apple Music", "YouTube Music"]
+    platforms = ["Spotify", "Apple Music", "YouTube Music", "Tencent Music", "Amazon Music"]
 
     df = pd.DataFrame({
         "track_id": [f"TRK_{str(i).zfill(6)}" for i in range(1, n + 1)], # genera ids únicos tipo TRK_000001 (no hay eventos repetidas en el dataset)
