@@ -9,7 +9,7 @@ Genera datasets sintéticos realistas para pruebas, enseñanza y desarrollo.
 
 ## ¿Qué es datafake?
 
-`datafake` es una librería de Python que genera datasets sintéticos realistas para 10 dominios distintos. Usa distribuciones estadísticas reales (Poisson, lognormal, Dirichlet, exponencial) para simular comportamientos plausibles con coherencia lógica entre variables.
+`datafake` es una librería de Python que genera datasets sintéticos realistas para 10 dominios distintos. Usa distribuciones estadísticas reales (Poisson, lognormal, normal, exponencial, etc) para simular comportamientos plausibles con coherencia lógica entre variables.
 
 Ideal para:
 - Pruebas de pipelines de datos
