@@ -11,6 +11,7 @@ from .flights import generate_flights
 from .elections import generate_elections
 from .products import generate_products
 from .related import generate_related
+from .custom import generate_custom
 from .utils import inject_missing, export_data, describe_dataset
 
 # define las funciones públicas (lo que se exporta cuando alguien hace from datafake import *)
@@ -28,6 +29,7 @@ __all__ = [
     "generate_products",
     "generate_related",
     "describe_dataset",
+    "generate_custom",
 ]
 
 # guarda la versión de la librería (debe coincidir siempre con la versión en pyproject.toml)
