@@ -1,13 +1,10 @@
 import pandas as pd
 import numpy as np
 from faker import Faker
-from .utils import inject_missing
+from .utils import inject_missing, export_data
 
-# crea una instancia global de Faker 
-fake = Faker()
-
-# define la función con 3 parámetros (con parámetros default)
-def generate_music(n=500, seed=42, missing_rate=0.0):
+# define la función con 4 parámetros (con parámetros default)
+def generate_music(n=500, seed=42, missing_rate=0.0, save_to=None, locale="en_US"):
     """
     Genera un conjunto de datos sintético de streaming de música.
     Parámetros:
@@ -19,6 +16,8 @@ def generate_music(n=500, seed=42, missing_rate=0.0):
         Proporción de valores faltantes a inyectar (0.0 a 1.0).
     Devuelve: pd.DataFrame
     """
+    # crea una instancia de Faker con el locale
+    fake = Faker(locale)
     # fija la semilla en numpy y en Faker por separado para garantizar reproducibilidad completa
     np.random.seed(seed)
     Faker.seed(seed)
@@ -44,6 +43,9 @@ def generate_music(n=500, seed=42, missing_rate=0.0):
         "bpm": np.random.randint(60, 180, size=n), # genera bpm entre 60 y 179 con distribución uniforme discreta
         "rating": np.round(np.random.uniform(1, 5, size=n), 1), # genera calificación entre 1.0 y 5.o con distribución uniforme continua
     })
+
+    if save_to: # guarda a csv o excel si se especifica
+        export_data(df, save_to)
 
     # pasa el DataFrame completo por inject_missing antes de devolverlo
     return inject_missing(df, missing_rate=missing_rate, seed=seed)

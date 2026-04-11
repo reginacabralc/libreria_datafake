@@ -52,3 +52,63 @@ def inject_missing(df: pd.DataFrame, missing_rate: float = 0.0, seed: int = None
         df.loc[mask, col] = np.nan
     # devuelve el df
     return df
+
+def export_data(df: pd.DataFrame, path: str):
+    """
+    Exporta un DataFrame a CSV o Excel según la extensión del archivo.
+    Parámetros: 
+    df : pd.DataFrame
+        El DataFrame a exportar.
+    path : str
+        Ruta del archivo destino. Usa .csv para CSV o .xlsx para Excel.
+    Devuelve: None
+    """
+    if path.endswith(".csv"):
+        df.to_csv(path, index=False)
+        print(f"Archivo guardado en: {path}")
+    elif path.endswith(".xlsx"):
+        df.to_excel(path, index=False)
+        print(f"Archivo guardado en: {path}")
+    else:
+        raise ValueError("El archivo debe tener extensión .csv o .xlsx")
+    
+def describe_dataset(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Genera un resumen detallado de un DataFrame sintético.
+    Parámetros:
+    df : pd.DataFrame
+        El DataFrame a describir.
+    Devuelve: pd.DataFrame
+    """
+    
+    rows = []
+
+    for col in df.columns:
+        serie = df[col]
+        info = {
+            "columna": col,
+            "tipo": str(serie.dtype),
+            "nulos": serie.isnull().sum(),
+            "pct_nulos": round(serie.isnull().mean() * 100, 1),
+            "unicos": serie.nunique(),
+        }
+
+        if pd.api.types.is_numeric_dtype(serie):
+            info["min"] = round(serie.min(), 2) if not serie.isnull().all() else None
+            info["max"] = round(serie.max(), 2) if not serie.isnull().all() else None
+            info["media"] = round(serie.mean(), 2) if not serie.isnull().all() else None
+            info["desv_std"] = round(serie.std(), 2) if not serie.isnull().all() else None
+            info["valores_frecuentes"] = None
+        else:
+            info["min"] = None
+            info["max"] = None
+            info["media"] = None
+            info["desv_std"] = None
+            top = serie.value_counts().head(3)
+            info["valores_frecuentes"] = ", ".join([f"{v}({c})" for v, c in top.items()])
+
+        rows.append(info)
+
+    resultado = pd.DataFrame(rows)
+    resultado = resultado.set_index("columna")
+    return resultado

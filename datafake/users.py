@@ -1,14 +1,11 @@
 import pandas as pd
 import numpy as np
 from faker import Faker
-from .utils import inject_missing
+from .utils import inject_missing, export_data
 
-# crea una instancia global de Faker 
-fake = Faker()
-
-# define la función con 3 parámetros (con parámetros default)
+# define la función con 4 parámetros (con parámetros default)
 # el default de n es 300 en lugar de 500 porque una base de clientes típicamente tiene menos registros que número de transacciones
-def generate_users(n=300, seed=42, missing_rate=0.0):
+def generate_users(n=300, seed=42, missing_rate=0.0, save_to=None, locale="en_US"):
     """
     Genera un conjunto de datos de usuarios sintético.
 
@@ -21,6 +18,9 @@ def generate_users(n=300, seed=42, missing_rate=0.0):
         Proporción de valores faltantes a inyectar (0.0 a 1.0).
     Devuelve: pd.DataFrame
     """
+    # crea una instancia de Faker con el locale
+    fake = Faker(locale)
+    
     # fija la semilla en numpy y en Faker por separado para garantizar reproducibilidad completa
     np.random.seed(seed)
     Faker.seed(seed)
@@ -47,5 +47,8 @@ def generate_users(n=300, seed=42, missing_rate=0.0):
     # crea una columna binaria que se deriva del status, donde status es "churned" pone 1, en los demás 0. Convierte la columna de True/False a entero 1/0
     df["churned"] = (df["status"] == "churned").astype(int)
     
+    if save_to: # guarda a csv o excel si se especifica
+        export_data(df, save_to)
+
     # pasa el DataFrame completo por inject_missing antes de devolverlo
     return inject_missing(df, missing_rate=missing_rate, seed=seed)

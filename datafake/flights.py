@@ -1,11 +1,9 @@
 import pandas as pd
 import numpy as np
 from faker import Faker
-from .utils import inject_missing
+from .utils import inject_missing, export_data
 
-fake = Faker()
-
-def generate_flights(n=500, seed=42, missing_rate=0.0):
+def generate_flights(n=500, seed=42, missing_rate=0.0, save_to=None, locale="en_US"):
     # si al llamar la función no da parámetros, genera por default 500 filas con seed 42 y sin NaNs
     """
     Genera un conjunto de datos de vuelos.
@@ -18,6 +16,9 @@ def generate_flights(n=500, seed=42, missing_rate=0.0):
         Proporción de valores faltantes a inyectar (0.0 a 1.0)
     Devuelve: pd.DataFrame
     """
+    # crea una instancia de Faker con el locale
+    fake = Faker(locale)
+    
     # inicializa la semilla aleatoria y en faker. Hay que fijar ambos para garantizar reproducibilidad
     np.random.seed(seed)
     Faker.seed(seed)
@@ -55,6 +56,9 @@ def generate_flights(n=500, seed=42, missing_rate=0.0):
         "passengers": np.random.randint(50, 400, size=n), # Genera número de pasajeros con distribución uniforme entre 50 y 400 (aviones pequeños o grandes, vacíos o totalmente llenos)
         "satisfaction": np.round(np.random.uniform(1, 10, size=n), 1), # Genera una calificaci´øn de satisfacción entre 1,0 y 10.0 con distribución uniforme. Se usa uniforme porque en encuestas de satisfacción los valores extremos son muy comunes
     })
+    
+    if save_to: # guarda a csv o excel si se especifica
+        export_data(df, save_to)
 
     # Antes de devolver el dataFrame, pasa por inject_missing. Si missing_rate=0.0 lo devuelve intacto, si no introduce NaNs en las columnas no protegidas
     return inject_missing(df, missing_rate=missing_rate, seed=seed)

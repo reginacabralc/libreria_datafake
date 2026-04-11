@@ -1,13 +1,10 @@
 import pandas as pd
 import numpy as np
 from faker import Faker
-from .utils import inject_missing
-
-# crea una instancia global de Faker 
-fake = Faker()
+from .utils import inject_missing, export_data
 
 # define la función con 3 parámetros (con parámetros default)
-def generate_movies(n=500, seed=42, missing_rate=0.0):
+def generate_movies(n=500, seed=42, missing_rate=0.0, save_to=None, locale="en_US"):
     """
     Genera un conjunto de datos sintético de películas/streaming.
     Parámetros:
@@ -19,6 +16,9 @@ def generate_movies(n=500, seed=42, missing_rate=0.0):
         Proporción de valores faltantes a inyectar (0.0 a 1.0).
     Devuelve: pd.DataFrame
     """
+    # crea una instancia de Faker con el locale
+    fake = Faker(locale)    
+    
     # fija la semilla en numpy y en Faker por separado para garantizar reproducibilidad completa
     np.random.seed(seed)
     Faker.seed(seed)
@@ -42,6 +42,9 @@ def generate_movies(n=500, seed=42, missing_rate=0.0):
         "box_office_usd": np.random.lognormal(mean=17, sigma=2, size=n).astype(int), # genera ganancia en taquilla con lognormal con media 17 (la mayoría gana poca y algunas ganan mucho)
         "sequel": np.random.choice([True, False], size=n, p=[0.20, 0.80]), # genera con distribución Bernoulli (el 20% son secuelas, imitando proporciones reales de la industria)
     })
+
+    if save_to: # guarda a csv o excel si se especifica
+        export_data(df, save_to)
 
     # pasa el DataFrame completo por inject_missing antes de devolverlo
     return inject_missing(df, missing_rate=missing_rate, seed=seed)
