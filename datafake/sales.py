@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
 from faker import Faker
-from .utils import inject_missing, export_data
+from .utils import inject_missing, export_data, inject_noise
 
-# define la función con 6 parámetros (con parámetros default)
-def generate_sales(n=500, seed=42, start_date="2024-01-01", end_date="2024-12-31", missing_rate=0.0, save_to=None, locale="en_US"):
+# define la función con 7 parámetros (con parámetros default)
+def generate_sales(n=500, seed=42, start_date="2024-01-01", end_date="2024-12-31", missing_rate=0.0, save_to=None, locale="en_US", noise_level=0.0):
     """
     Genera un conjunto de datos de ventas sintético.
 
@@ -59,6 +59,8 @@ def generate_sales(n=500, seed=42, start_date="2024-01-01", end_date="2024-12-31
 
     if save_to:
         export_data(df, save_to) # guarda a csv o excel
-        
+
+    df = inject_noise(df, noise_level=noise_level, seed=seed) # inyecta ruido antes de los missing para que los NaNs también puedan aparecer en valores ruidosos
+    
     # pasa el DataFrame completo por inject_missing antes de devolverlo
     return inject_missing(df, missing_rate=missing_rate, seed=seed)

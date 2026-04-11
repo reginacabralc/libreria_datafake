@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
 from faker import Faker
-from .utils import inject_missing, export_data
+from .utils import inject_missing, export_data, inject_noise
 
-def generate_related(n_customers=200, n_products=50, n_sales=1000, seed=42, locale="en_US"):
+def generate_related(n_customers=200, n_products=50, n_sales=1000, seed=42, locale="en_US", missing_rate=0.0, noise_level=0.0, save_to=None):
     """
     Genera un conjunto de datasets relacionados con IDs consistentes
     para permitir joins entre tablas.
@@ -20,6 +20,12 @@ def generate_related(n_customers=200, n_products=50, n_sales=1000, seed=42, loca
         Semilla para reproducibilidad.
     locale : str
         Idioma para los datos generados por Faker.
+    missing_rate : float
+        Proporción de valores faltantes (0.0 a 1.0).
+    noise_level : float
+        Nivel de ruido a agregar a columnas numéricas (0.0 a 1.0).
+    save_to : str
+        Carpeta destino para guardar los tres archivos CSV. Opcional.
 
     Retorna
     -------
@@ -81,10 +87,28 @@ def generate_related(n_customers=200, n_products=50, n_sales=1000, seed=42, loca
         "unit_price": np.round(prices, 2),
         "payment_method": np.random.choice(payment_methods, size=n_sales, p=[0.55, 0.25, 0.12, 0.08]),
         "status": np.random.choice(statuses, size=n_sales, p=[0.88, 0.07, 0.05]),
+        "revenue": np.round(quantities * prices, 2),
     })
 
-    sales["revenue"] = np.round(sales["quantity"] * sales["unit_price"], 2)
     sales["date"] = pd.to_datetime(sales["date"]).dt.date
+
+    # ── RUIDO ─────────────────────────────────
+    customers = inject_noise(customers, noise_level=noise_level, seed=seed)
+    products = inject_noise(products, noise_level=noise_level, seed=seed)
+    sales = inject_noise(sales, noise_level=noise_level, seed=seed)
+
+    # ── VALORES FALTANTES ─────────────────────
+    customers = inject_missing(customers, missing_rate=missing_rate, seed=seed)
+    products = inject_missing(products, missing_rate=missing_rate, seed=seed)
+    sales = inject_missing(sales, missing_rate=missing_rate, seed=seed)
+
+    # ── EXPORTAR ──────────────────────────────
+    if save_to:
+        import os
+        os.makedirs(save_to, exist_ok=True)
+        export_data(customers, f"{save_to}/customers.csv")
+        export_data(products, f"{save_to}/products.csv")
+        export_data(sales, f"{save_to}/sales.csv")
 
     return {
         "customers": customers,

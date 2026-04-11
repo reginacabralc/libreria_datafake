@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 from faker import Faker
-from .utils import inject_missing, export_data
+from .utils import inject_missing, export_data, inject_noise
 
-# define la función con 7 parámetros (con parámetros default)
+# define la función con 8 parámetros (con parámetros default)
 # tiene sentido controlar el rango de fechas porque es clima
-def generate_weather(n=500, seed=42, start_date="2024-01-01", end_date="2024-12-31", missing_rate=0.0, save_to=None, locale="en_US"):
+def generate_weather(n=500, seed=42, start_date="2024-01-01", end_date="2024-12-31", missing_rate=0.0, save_to=None, locale="en_US", noise_level=0.0):
     """
     Genera un conjunto de datos de clima sintético.
     Parámetros:

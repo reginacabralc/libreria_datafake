@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
 from faker import Faker
-from .utils import inject_missing, export_data
+from .utils import inject_missing, export_data, inject_noise
 
-# define la función con 4 parámetros (con parámetros default)
-def generate_music(n=500, seed=42, missing_rate=0.0, save_to=None, locale="en_US"):
+# define la función con 5 parámetros (con parámetros default)
+def generate_music(n=500, seed=42, missing_rate=0.0, save_to=None, locale="en_US", noise_level=0.0):
     """
     Genera un conjunto de datos sintético de streaming de música.
     Parámetros:
@@ -47,5 +47,7 @@ def generate_music(n=500, seed=42, missing_rate=0.0, save_to=None, locale="en_US
     if save_to: # guarda a csv o excel si se especifica
         export_data(df, save_to)
 
+    df = inject_noise(df, noise_level=noise_level, seed=seed) # inyecta ruido antes de los missing para que los NaNs también puedan aparecer en valores ruidosos
+    
     # pasa el DataFrame completo por inject_missing antes de devolverlo
     return inject_missing(df, missing_rate=missing_rate, seed=seed)

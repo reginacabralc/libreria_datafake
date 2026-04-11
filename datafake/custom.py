@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from faker import Faker
-from .utils import export_data, inject_missing
+from .utils import export_data, inject_missing, inject_noise
 
 SUPPORTED_TYPES = [
     "int", "float", "normal", "lognormal", "bool",
@@ -9,7 +9,7 @@ SUPPORTED_TYPES = [
     "date", "text"
 ]
 
-def generate_custom(schema: dict, n: int = 500, seed: int = 42, locale: str = "en_US", save_to: str = None, missing_rate: float = 0.0):
+def generate_custom(schema: dict, n: int = 500, seed: int = 42, locale: str = "en_US", save_to: str = None, missing_rate: float = 0.0, noise_level: float = 0.0):
     """
     Genera un dataset sintético personalizado basado en un esquema definido por el usuario.
 
@@ -117,4 +117,5 @@ def generate_custom(schema: dict, n: int = 500, seed: int = 42, locale: str = "e
     if save_to:
         export_data(df, save_to)
 
+    df = inject_noise(df, noise_level=noise_level, seed=seed)
     return inject_missing(df, missing_rate=missing_rate, seed=seed)

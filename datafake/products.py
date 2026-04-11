@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
 from faker import Faker
-from .utils import inject_missing, export_data
+from .utils import inject_missing, export_data, inject_noise
 
-def generate_products(n=50, seed=42, missing_rate=0.0, save_to=None, locale="en_US"):
+def generate_products(n=50, seed=42, missing_rate=0.0, save_to=None, locale="en_US", noise_level=0.0):
     """
     Genera un dataset sintético de productos.
     Parámetros:
@@ -39,4 +39,7 @@ def generate_products(n=50, seed=42, missing_rate=0.0, save_to=None, locale="en_
     if save_to:
         export_data(df, save_to)
 
+    df = inject_noise(df, noise_level=noise_level, seed=seed) # inyecta ruido antes de los missing para que los NaNs también puedan aparecer en valores ruidosos
+    
+    # pasa el DataFrame completo por inject_missing antes de devolverlo
     return inject_missing(df, missing_rate=missing_rate, seed=seed)

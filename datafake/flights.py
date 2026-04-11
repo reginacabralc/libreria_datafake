@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
 from faker import Faker
-from .utils import inject_missing, export_data
+from .utils import inject_missing, export_data, inject_noise
 
-def generate_flights(n=500, seed=42, missing_rate=0.0, save_to=None, locale="en_US"):
+def generate_flights(n=500, seed=42, missing_rate=0.0, save_to=None, locale="en_US", noise_level=0.0):
     # si al llamar la función no da parámetros, genera por default 500 filas con seed 42 y sin NaNs
     """
     Genera un conjunto de datos de vuelos.
@@ -60,5 +60,7 @@ def generate_flights(n=500, seed=42, missing_rate=0.0, save_to=None, locale="en_
     if save_to: # guarda a csv o excel si se especifica
         export_data(df, save_to)
 
-    # Antes de devolver el dataFrame, pasa por inject_missing. Si missing_rate=0.0 lo devuelve intacto, si no introduce NaNs en las columnas no protegidas
+    df = inject_noise(df, noise_level=noise_level, seed=seed) # inyecta ruido antes de los missing para que los NaNs también puedan aparecer en valores ruidosos
+    
+    # pasa el DataFrame completo por inject_missing antes de devolverlo
     return inject_missing(df, missing_rate=missing_rate, seed=seed)
