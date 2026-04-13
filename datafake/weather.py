@@ -57,5 +57,7 @@ def generate_weather(n=500, seed=42, start_date="2024-01-01", end_date="2024-12-
     if save_to: # guarda a csv o excel si se especifica
         export_data(df, save_to)
 
+    df = inject_noise(df, noise_level=noise_level, seed=seed) # inyecta ruido antes de los missing para que los NaNs también puedan aparecer en valores ruidosos
+    
     # pasa el DataFrame completo por inject_missing antes de devolverlo
     return inject_missing(df, missing_rate=missing_rate, seed=seed)
