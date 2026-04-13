@@ -173,7 +173,7 @@ print(summary)
 
 Open the full tutorial notebook directly in Google Colab:
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](COLAB_LINK_HERE)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/11v0WewsAYgRdeCmq7hxap4dpvNv58JTi)
 
 ---
 
